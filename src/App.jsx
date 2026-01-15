@@ -6,6 +6,27 @@ import ButtonModal from "./components/ButtonModal.jsx";
 function App() {
     const [balance, setBalance] = useState(1800)
     const [isModal, setModal] = useState(false)
+    const [transactions, setTransactions] = useState(
+        [{
+            id:1,
+            title:"ZARPLATA",
+            amount:200,
+            income:true
+        },
+        {
+            id:2,
+            title:"KAZIK",
+            amount:100,
+            income:false
+        },
+            {
+                id:3,
+                title:"ЛАСТ ДОДЕП",
+                amount:50,
+                income:false
+            }]
+    );
+
 
     const openModal = () =>{
         setModal(!isModal)
@@ -23,19 +44,24 @@ function App() {
             <main className="flex flex-col w-full pl-10 lg:max-w-1/3">
                 <h2 className="pt-8">My transactions</h2>
                 <ul className="py-10 grid grid-cols-1 gap-3 w-[90%] h-auto uppercase">
-                    <li className="relative py-3 px-5  flex justify-between rounded-xl bg-[rgba(0,0,0,0.35)] border-r-16 border-green-300
+                    {transactions.map((transaction)=> {
+                        const statusClasses = transaction.income
+                            ? "border-green-300 before:bg-green-400/70"
+                            : "border-red-300 before:bg-red-400/70"
+                        return (
+                            <li key={transaction.id} className={`relative py-3 px-5  flex justify-between rounded-xl bg-[rgba(0,0,0,0.35)] border-r-16
                     before:content-[''] before:absolute before:inset-y-0 before:-right-[15px]
-                    before:w-[13px] before:bg-green-400/70 before:blur-md before:rounded-full">
-                        <h3>plusik malenki</h3>
-                        <p>+412</p>
+                    before:w-[13px] before:blur-md before:rounded-full ${statusClasses}`}>
+                                <h3>{transaction.title}</h3>
+                                {transaction.income
+                                    ? <p>+ {transaction.amount}</p>
+                                    : <p>- {transaction.amount}</p>
+                                }
 
-                    </li>
-                    <li className="relative py-3 px-5  flex justify-between rounded-xl bg-[rgba(0,0,0,0.35)] border-r-16 border-red-300
-                    before:content-[''] before:absolute before:inset-y-0 before:-right-[15px]
-                    before:w-[13px] before:bg-red-400/70 before:blur-md before:rounded-full">
-                        <h3>dodep kazik</h3>
-                        <p>-223</p>
-                    </li>
+                            </li>
+                            );
+                        }
+                    )}
                 </ul>
                 <ButtonModal openModal={openModal}/>
                 <TransactionModal openModal={openModal} isModal={isModal}/>
